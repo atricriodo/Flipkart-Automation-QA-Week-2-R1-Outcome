@@ -28,6 +28,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
     implementation 'org.seleniumhq.selenium:selenium-java:4.14.0'
 
+    testImplementation 'org.testng:testng:6.9.10'
+
 }
 
 //task startScript(type:Exec) {
@@ -39,3 +41,13 @@ dependencies {
 //test.dependsOn startScript
 
 mainClassName = 'demo.App'
+test {
+    useTestNG() {
+        suites 'src/test/resources/testng.xml'
+    }
+    // Configure test logging
+    testLogging {
+        showStandardStreams = true
+        events "passed", "skipped", "failed"
+    }
+}
