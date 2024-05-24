@@ -4,10 +4,15 @@ import demo.utils.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -21,8 +26,23 @@ public class TestCases {
     @BeforeClass
     public void setup(){
         System.out.println("Constructor: Driver");
+
+
+        // Set log level and type
+        ChromeOptions options = new ChromeOptions();
+
+
+        LoggingPreferences logs = new LoggingPreferences();
+
+        logs.enable(LogType.BROWSER, Level.ALL);
+        logs.enable(LogType.DRIVER, Level.ALL);
+        options.setCapability("goog:loggingPrefs", logs);
+
+        // Set path for log file
+        System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, "chromedriver.log");
+
         WebDriverManager.chromedriver().timeout(30).setup();
-        driver = new ChromeDriver();
+        driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         System.out.println("Successfully Created Driver");
     }
@@ -92,7 +112,13 @@ public class TestCases {
         Thread.sleep((new java.util.Random().nextInt(3) + 2) * 1000);
         Utilities.clickWrapper(driver, By.xpath("//div[text()='4★ & above']//ancestor::div[1]//div[1]"));
         Thread.sleep((new java.util.Random().nextInt(3) + 2) * 1000);
-        List<String> result = Utilities.searchHighestReview(driver, By.xpath("//a[@rel='noopener noreferrer'][2]"), By.xpath("//a[@rel='noopener noreferrer'][2]/../div[3]//span[2]"));
+        List<String> result = Utilities.searchHighestReview(driver, 
+                                                    // Old Xpath
+                                                    // By.xpath("//a[@rel='noopener noreferrer'][2]"),
+                                                    By.xpath("//div[@class='slAVV4']//a[@rel='noopener noreferrer'][2]"),
+                                                    // Old Xpath
+                                                    // By.xpath("//a[@rel='noopener noreferrer'][2]/../div[3]//span[2]"));
+                                                    By.xpath("//div[@class='slAVV4']//span[@class='Wphh3N']"));
         for(String s: result){
             System.out.println(s);
         }

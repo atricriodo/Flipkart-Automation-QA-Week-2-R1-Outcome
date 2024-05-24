@@ -86,15 +86,15 @@ public class Utilities {
         return results;
     }
 
-    public static List<String> searchHighestReview(WebDriver driver, By locatorOfTitle, By locatorOfRating) {
+    public static List<String> searchHighestReview(WebDriver driver, By locatorOfTitle, By locatorOfAttribute) {
         System.out.println("Printing products with more with certain attribute");
         List<WebElement> titles = driver.findElements(locatorOfTitle);
-        List<WebElement> attr = driver.findElements(locatorOfRating);
+        List<WebElement> attr = driver.findElements(locatorOfAttribute);
         System.out.println("Found Titles: "+titles.size()+" and attribute "+attr.size());
         HashMap<String, Integer> results = new HashMap<String, Integer>();
 
         if(attr.size()!=titles.size()){
-            System.out.println("Mismatch in size of array");
+            System.out.println("Mismatch in size of array, modifying to adjut");
             if(attr.size()>titles.size()) attr = sliceArrayList(attr, titles.size());
             else titles = sliceArrayList(titles, attr.size());
         }
@@ -102,10 +102,12 @@ public class Utilities {
         for (int i = 0; i < titles.size(); i++) {
             String title = titles.get(i).getText();
             String attribute = attr.get(i).getText();
-            attribute = removeSubstring(removeSubstring(attribute, "("),")");
+            attribute = removeSubstring(removeSubstring(attribute, "("),")").replace(",", ""); // Making it parseable
             Integer attributeInt = 0;
             try {
                 // Convert rating from String to Float
+                // DEBUG
+                // System.out.println("Parsing attribute - "+attribute);
                 attributeInt = Integer.parseInt(attribute);
                 results.putIfAbsent(title, attributeInt);
                 
